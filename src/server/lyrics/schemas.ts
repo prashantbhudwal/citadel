@@ -1,0 +1,88 @@
+import { z } from 'zod'
+
+export const ArtistSchema = z.object({
+  _type: z.literal('artist').describe("Entity type: always 'artist'"),
+  api_path: z.string().describe('Relative Genius API path for the artist'),
+  header_image_url: z.string().describe('Large header artwork URL'),
+  id: z.number().describe('Genius artist ID'),
+  image_url: z.string().describe('Main artist image URL'),
+  index_character: z.string().describe('First letter used for indexing'),
+  is_meme_verified: z.boolean().describe('Genius meme verification flag'),
+  is_verified: z.boolean().describe('Genius verification flag'),
+  name: z.string().describe('Artist display name'),
+  slug: z.string().describe('URL-safe identifier'),
+  url: z.string().describe('Canonical Genius artist page URL'),
+  iq: z
+    .number()
+    .nullable()
+    .optional()
+    .describe('Genius IQ reputation score, may be missing'),
+})
+
+export const ReleaseDateComponentsSchema = z.object({
+  year: z.number().nullable().describe('Release year'),
+  month: z.number().nullable().describe('Release month'),
+  day: z.number().nullable().describe('Release day'),
+})
+
+export const StatsSchema = z.object({
+  unreviewed_annotations: z
+    .number()
+    .describe('Count of unreviewed annotations'),
+  hot: z.boolean().describe('Whether the song is trending/hot'),
+})
+
+export const SongSchema = z.object({
+  _type: z.literal('song').describe("Entity type: always 'song'"),
+  annotation_count: z.number().describe('Total annotation count'),
+  api_path: z.string().describe('Relative Genius API path for the song'),
+  artist_names: z.string().describe('All artist names including featured'),
+  full_title: z.string().describe('Full formatted title with artists'),
+  header_image_thumbnail_url: z.string().describe('Header image thumbnail URL'),
+  header_image_url: z.string().describe('Full header image URL'),
+  id: z.number().describe('Genius song ID'),
+  instrumental: z.boolean().describe('Whether the track is instrumental'),
+  lyrics_owner_id: z.number().describe('User ID owning the lyrics'),
+  lyrics_state: z.string().describe('Lyrics status e.g. complete'),
+  lyrics_updated_at: z
+    .number()
+    .nullable()
+    .describe('Timestamp of last lyrics update, may be null'),
+  path: z.string().describe('Public Genius path for the song'),
+  primary_artist_names: z.string().describe('Main artist(s) only'),
+  pyongs_count: z.number().nullable().describe('Upvote count, may be null'),
+  relationships_index_url: z.string().describe('URL of samples/interpolations'),
+  release_date_components: ReleaseDateComponentsSchema.nullable().describe(
+    'Structured release date, may be null for unknown dates',
+  ),
+  release_date_for_display: z
+    .string()
+    .nullable()
+    .describe('Human-readable release date, may be null'),
+  release_date_with_abbreviated_month_for_display: z
+    .string()
+    .nullable()
+    .describe('Human-readable date with abbreviated month, may be null'),
+  song_art_image_thumbnail_url: z.string().describe('Song artwork thumbnail'),
+  song_art_image_url: z.string().describe('Song artwork full size'),
+  stats: StatsSchema.describe('Song stats object'),
+  title: z.string().describe('Base song title'),
+  title_with_featured: z.string().describe('Title including featured artists'),
+  updated_by_human_at: z.number().describe('Timestamp of last human edit'),
+  url: z.string().describe('Canonical Genius song URL'),
+  featured_artists: z
+    .array(ArtistSchema)
+    .describe('List of featured artists, may be empty'),
+  primary_artist: ArtistSchema.describe('Main artist object'),
+  primary_artists: z
+    .array(ArtistSchema)
+    .describe('Array of main artists (usually one)'),
+})
+
+export const ZSchema = {
+  Genius: {
+    Artist: ArtistSchema,
+    Song: SongSchema,
+    Stats: StatsSchema,
+  },
+}
