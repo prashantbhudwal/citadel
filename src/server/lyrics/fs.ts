@@ -46,9 +46,28 @@ async function readSongList({
   return songs
 }
 
+const LYRICS_FILE_NAME = 'lyrics.jsonl'
+
+async function appendLyric({
+  artistId,
+  lyricData,
+}: {
+  artistId: string
+  lyricData: TSong & { lyrics: string }
+}) {
+  const dir = getArtistDir({ artistId })
+  await fsp.mkdir(dir, { recursive: true })
+  const filePath = path.join(dir, LYRICS_FILE_NAME)
+  const line = JSON.stringify(lyricData) + '\n'
+  await fsp.appendFile(filePath, line, 'utf-8')
+}
+
 export const fs = {
   songs: {
     write: persistSongList,
     read: readSongList,
+  },
+  lyrics: {
+    append: appendLyric,
   },
 }

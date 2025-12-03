@@ -99,8 +99,10 @@ export class GeniusLyricsService {
 
   async fetchSongsForArtist({
     artistId,
+    maxPages,
   }: {
     artistId: string
+    maxPages?: number
   }): Promise<TSong[]> {
     let page: null | number = 1
     let allSongs: TSong[] = []
@@ -119,6 +121,12 @@ export class GeniusLyricsService {
 
         allSongs.push(...songs)
         page = nextPage
+
+        if (maxPages && page && page > maxPages) {
+          console.log(`Reached max pages (${maxPages}). Stopping.`)
+          break
+        }
+
         if (page) {
           await this.wait()
         }
@@ -163,10 +171,10 @@ export class GeniusLyricsService {
   }
 
   async runBatch(
-    { artistId }: { artistId: string },
-    sink: (payload: ScrapeTarget & { lyrics: string }) => void,
+    { artistId, maxPages }: { artistId: string; maxPages?: number },
+    sink: (payload: TSong & { lyrics: string }) => void,
   ): Promise<void> {
-    const songs = await this.fetchSongsForArtist({ artistId })
+    const songs = await this.fetchSongsForArtist({ artistId, maxPages })
     console.log(`Starting batch scrape for ${songs.length} songs...`)
 
     for (const song of songs) {
@@ -174,7 +182,7 @@ export class GeniusLyricsService {
       const lyrics = await this.scrapeLyrics(target)
 
       if (lyrics) {
-        sink({ ...target, lyrics })
+        sink({ ...song, lyrics })
       }
 
       await this.wait()
