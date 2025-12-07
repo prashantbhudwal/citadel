@@ -32,6 +32,28 @@ export const StatsSchema = z.object({
   hot: z.boolean().describe('Whether the song is trending/hot'),
 })
 
+export const AlbumSchema = z.object({
+  _type: z.literal('album').describe("Entity type: always 'album'"),
+  api_path: z.string().describe('Relative Genius API path for the album'),
+  cover_art_thumbnail_url: z.string().describe('Album art thumbnail URL'),
+  cover_art_url: z.string().describe('Full album art URL'),
+  full_title: z.string().describe('Full formatted title with artist'),
+  id: z.number().describe('Genius album ID'),
+  name: z.string().describe('Album title'),
+  name_with_artist: z.string().describe('Album title with artist name'),
+  primary_artist_names: z.string().describe('Main artist name(s)'),
+  release_date_components: ReleaseDateComponentsSchema.nullable().describe(
+    'Structured release date',
+  ),
+  release_date_for_display: z
+    .string()
+    .nullable()
+    .describe('Human-readable release date'),
+  url: z.string().describe('Canonical Genius album URL'),
+  artist: ArtistSchema.describe('Primary artist object'),
+  primary_artists: z.array(ArtistSchema).describe('List of primary artists'),
+})
+
 export const SongSchema = z.object({
   _type: z.literal('song').describe("Entity type: always 'song'"),
   annotation_count: z.number().describe('Total annotation count'),
@@ -79,10 +101,40 @@ export const SongSchema = z.object({
     .describe('Array of main artists (usually one)'),
 })
 
+const ZSongMetadata = z.object({
+  language: z.string().nullish(),
+  album: AlbumSchema,
+  albums: z.array(AlbumSchema),
+})
+
+const ZSongWithMetadata = SongSchema.extend(ZSongMetadata)
+
+const ZRawLyrics = z.object({
+  lyrics: z.string(),
+})
+
+const ZTrackRaw = ZSongWithMetadata.extend(ZRawLyrics)
+
+const ZProcessedLyrics = z.array(
+  z.object({
+    verse: z.string(),
+    artist: ArtistSchema,
+  }),
+)
+
+const ZTrackProcessed = ZTrackRaw.extend({
+  processedLyrics: ZProcessedLyrics,
+})
+
 export const ZSchema = {
   Genius: {
     Artist: ArtistSchema,
     Song: SongSchema,
+    TrackUnprocessed: ZTrackRaw,
     Stats: StatsSchema,
+    SongMetadata: ZSongMetadata,
+  },
+  Citadel: {
+    Track: ZTrackProcessed,
   },
 }
