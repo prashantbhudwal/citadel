@@ -9,7 +9,8 @@
     "test": "vitest run",
     "lint": "eslint",
     "format": "prettier",
-    "check": "prettier --write . && eslint --fix"
+    "check": "prettier --write . && eslint --fix",
+    "run:script": "tsx src/run.ts"
   },
   "dependencies": {
     "@radix-ui/react-aspect-ratio": "^1.1.8",
@@ -46,6 +47,7 @@
     "jsdom": "^27.2.0",
     "prettier": "^3.6.2",
     "slugify": "^1.6.6",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vite": "^7.2.2",
     "vitest": "^4.0.8",
