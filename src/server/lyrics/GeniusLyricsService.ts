@@ -170,35 +170,13 @@ export class GeniusLyricsService {
     }
   }
 
-  async runBatch(
-    { artistId, maxPages }: { artistId: string; maxPages?: number },
-    sink: (payload: TSong & { lyrics: string }) => void,
-  ): Promise<void> {
-    const songs = await this.fetchSongsForArtist({ artistId, maxPages })
-    console.log(`Starting batch scrape for ${songs.length} songs...`)
-
+  async *runScraper({ songs }: { songs: TSong[] }) {
     for (const song of songs) {
       const target = this.transformToScrapeTarget(song)
       const lyrics = await this.scrapeLyrics(target)
 
       if (lyrics) {
-        sink({ ...song, lyrics })
-      }
-
-      await this.wait()
-    }
-    console.log('Batch scrape complete.')
-  }
-
-  async *run({ songs }: { songs: TSong[] }) {
-    if (songs.length === 0) throw new Error('No songs provided!')
-
-    for (const song of songs) {
-      const target = this.transformToScrapeTarget(song)
-      const lyrics = await this.scrapeLyrics(target)
-
-      if (lyrics) {
-        yield { ...target, lyrics }
+        yield { ...song, lyrics }
       }
 
       await this.wait()
