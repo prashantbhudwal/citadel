@@ -4,22 +4,41 @@ import { fs } from './fs'
 
 const artists = [{ name: 'eminem', id: '45' }]
 
-async function main() {
+export async function runScraper() {
   const artistId = artists[0].id
-  const service = new GeniusLyricsService({ api: geniusApi, delay: 2000 }) // 2s delay to be safe
+  const service = new GeniusLyricsService({ api: geniusApi, delay: 1000 })
+  console.log(`Starting fetch for ${artists[0].name} (ID: ${artistId})`)
 
-  console.log(`Starting scrape for ${artists[0].name} (ID: ${artistId})`)
+  const songs = await service.fetchSongsForArtist({ artistId })
+  console.log(`Fetched ${songs.length} songs`)
 
-  // Pass maxPages: 1 to limit for testing
-  await service.runBatch({ artistId }, async (data) => {
-    console.log(`Saving lyrics for: ${data.title}`)
-    await fs.lyrics.append({
-      artistId,
-      lyricData: data,
-    })
-  })
+  try {
+    console.log('Saving song list...')
+    await fs.songs.write({ songs, artistId })
+  } catch (error) {
+    console.error('Failed to persist song list', error)
+    throw error
+  }
+
+  try {
+    console.log(`Starting lyrics scrape for ${songs.length} songs...`)
+    const generator = service.runScraper({ songs })
+
+    for await (const data of generator) {
+      try {
+        console.log(`Saving lyrics for: ${data.title}`)
+        await fs.lyrics.append({
+          artistId,
+          lyricData: data,
+        })
+      } catch (error) {
+        console.error(`Failed to write lyrics for ${data.title}`, error)
+      }
+    }
+  } catch (error) {
+    console.error('Lyrics scrape aborted', error)
+    throw error
+  }
 
   console.log('Done!')
 }
-
-main().catch(console.error)

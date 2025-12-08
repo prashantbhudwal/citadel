@@ -26,7 +26,7 @@ describe('GeniusLyricsService', () => {
     // Mock scrapeLyrics to avoid network calls
     vi.spyOn(service, 'scrapeLyrics').mockResolvedValue('Mock Lyrics')
 
-    const generator = service.run({ songs: [sampleSong] })
+    const generator = service.runScraper({ songs: [sampleSong] })
     const results = []
     for await (const result of generator) {
       results.push(result)
