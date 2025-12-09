@@ -1,0 +1,14 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+/// Simple placeholder model to validate schema and generation.
+model Sample {
+  id   Int    @id @default(autoincrement())
+  name String
+}
