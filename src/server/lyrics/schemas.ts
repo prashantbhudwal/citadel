@@ -107,13 +107,13 @@ const ZSongMetadata = z.object({
   albums: z.array(AlbumSchema),
 })
 
-const ZSongWithMetadata = SongSchema.extend(ZSongMetadata)
+const ZSongWithMetadata = SongSchema.extend(ZSongMetadata.shape)
 
 const ZRawLyrics = z.object({
   lyrics: z.string(),
 })
 
-const ZTrackRaw = ZSongWithMetadata.extend(ZRawLyrics)
+const ZTrackRaw = ZSongWithMetadata.extend(ZRawLyrics.shape)
 
 const ZProcessedLyrics = z.array(
   z.object({
@@ -129,6 +129,7 @@ const ZTrackProcessed = ZTrackRaw.extend({
 export const ZSchema = {
   Genius: {
     Artist: ArtistSchema,
+    Album: AlbumSchema,
     Song: SongSchema,
     TrackUnprocessed: ZTrackRaw,
     Stats: StatsSchema,
