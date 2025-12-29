@@ -13,12 +13,14 @@
     "run:script": "tsx src/run.ts",
     "prisma:generate": "prisma generate",
     "prisma:db:push": "prisma db push",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "inngest:dev": "inngest-cli dev"
   },
   "dependencies": {
     "@ai-sdk/openai": "3.0.0",
     "@ai-sdk/react": "3.0.1",
     "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "@prisma/client": "^7.2.0",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.8.4",
@@ -32,6 +34,7 @@
     "cheerio": "^1.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "inngest": "^3.48.1",
     "ky": "^1.14.1",
     "lucide-react": "^0.562.0",
     "nitro": "latest",
@@ -54,6 +57,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
     "dotenv": "^17.2.3",
+    "inngest-cli": "^1.15.3",
     "jsdom": "^27.3.0",
     "prettier": "^3.7.4",
     "prisma": "^7.2.0",
@@ -64,5 +68,14 @@
     "vitest": "^4.0.16",
     "web-vitals": "^5.1.0"
   },
-  "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501"
+  "packageManager": "pnpm@10.25.0+sha512.5e82639027af37cf832061bcc6d639c219634488e0f2baebe785028a793de7b525ffcd3f7ff574f5e9860654e098fe852ba8ac5dd5cefe1767d23a020a92f501",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "inngest-cli",
+      "@prisma/engines",
+      "esbuild",
+      "prisma",
+      "protobufjs"
+    ]
+  }
 }
