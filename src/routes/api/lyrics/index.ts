@@ -1,6 +1,8 @@
-import { getLyrics } from '@/server/lyrics'
 import { createFileRoute } from '@tanstack/react-router'
 
+export async function getLyrics() {
+  return []
+}
 export const Route = createFileRoute('/api/lyrics/')({
   server: {
     handlers: {
