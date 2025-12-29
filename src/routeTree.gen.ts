@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DwIndexRouteImport } from './routes/dw/index'
+import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as DwBooksIndexRouteImport } from './routes/dw/books/index'
 import { Route as ApiLyricsIndexRouteImport } from './routes/api/lyrics/index'
 import { Route as DwApiTestRouteImport } from './routes/dw/api/test'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const DwIndexRoute = DwIndexRouteImport.update({
   id: '/dw/',
   path: '/dw/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiInngestRoute = ApiInngestRouteImport.update({
+  id: '/api/inngest',
+  path: '/api/inngest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DwBooksIndexRoute = DwBooksIndexRouteImport.update({
@@ -43,6 +49,7 @@ const DwApiTestRoute = DwApiTestRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/dw': typeof DwIndexRoute
   '/dw/api/test': typeof DwApiTestRoute
   '/api/lyrics': typeof ApiLyricsIndexRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/dw': typeof DwIndexRoute
   '/dw/api/test': typeof DwApiTestRoute
   '/api/lyrics': typeof ApiLyricsIndexRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/api/inngest': typeof ApiInngestRoute
   '/dw/': typeof DwIndexRoute
   '/dw/api/test': typeof DwApiTestRoute
   '/api/lyrics/': typeof ApiLyricsIndexRoute
@@ -65,14 +74,34 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dw' | '/dw/api/test' | '/api/lyrics' | '/dw/books'
+  fullPaths:
+    | '/'
+    | '/api/inngest'
+    | '/dw'
+    | '/dw/api/test'
+    | '/api/lyrics'
+    | '/dw/books'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dw' | '/dw/api/test' | '/api/lyrics' | '/dw/books'
-  id: '__root__' | '/' | '/dw/' | '/dw/api/test' | '/api/lyrics/' | '/dw/books/'
+  to:
+    | '/'
+    | '/api/inngest'
+    | '/dw'
+    | '/dw/api/test'
+    | '/api/lyrics'
+    | '/dw/books'
+  id:
+    | '__root__'
+    | '/'
+    | '/api/inngest'
+    | '/dw/'
+    | '/dw/api/test'
+    | '/api/lyrics/'
+    | '/dw/books/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApiInngestRoute: typeof ApiInngestRoute
   DwIndexRoute: typeof DwIndexRoute
   DwApiTestRoute: typeof DwApiTestRoute
   ApiLyricsIndexRoute: typeof ApiLyricsIndexRoute
@@ -93,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/dw'
       fullPath: '/dw'
       preLoaderRoute: typeof DwIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/inngest': {
+      id: '/api/inngest'
+      path: '/api/inngest'
+      fullPath: '/api/inngest'
+      preLoaderRoute: typeof ApiInngestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dw/books/': {
@@ -121,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApiInngestRoute: ApiInngestRoute,
   DwIndexRoute: DwIndexRoute,
   DwApiTestRoute: DwApiTestRoute,
   ApiLyricsIndexRoute: ApiLyricsIndexRoute,
