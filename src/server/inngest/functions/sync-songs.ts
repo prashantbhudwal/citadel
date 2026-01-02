@@ -1,6 +1,6 @@
 import { inngest } from '../client'
 import { fetchSongsPage, type TSong } from '@/server/lyrics/genius-api'
-import { persistSongBatch } from '@/server/lyrics/persistence'
+import { persistSongBatch } from '@/server/lyrics/db'
 
 export const syncSongs = inngest.createFunction(
   { id: 'sync-songs' },

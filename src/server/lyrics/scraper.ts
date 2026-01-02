@@ -1,6 +1,6 @@
 import ky from 'ky'
 import { extractLyricsFromHtml } from './parseHtml'
-import { wait } from './wait'
+import { wait } from './legacy/wait'
 import type z from 'zod'
 import type { SongSchema } from './schemas'
 

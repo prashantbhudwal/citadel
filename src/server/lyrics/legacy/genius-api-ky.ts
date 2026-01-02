@@ -1,6 +1,6 @@
 import ky from 'ky'
 
-export const geniusApi = ky.create({
+export const geniusApiLegacy = ky.create({
   prefixUrl: 'https://www.genius.com/api',
   headers: {
     'User-Agent':
@@ -13,4 +13,4 @@ export const geniusApi = ky.create({
   },
 })
 
-export type TGeniusApi = typeof geniusApi
+export type TGeniusApi = typeof geniusApiLegacy

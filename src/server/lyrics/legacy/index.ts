@@ -1,12 +1,12 @@
 import { GeniusLyricsService } from './GeniusLyricsService'
-import { geniusApi } from './ky'
+import { geniusApiLegacy } from './genius-api-ky'
 import { dbService } from './db'
 
 const artists = [{ name: 'eminem', id: '45' }]
 
 export async function runScraper() {
   const artistId = artists[0].id
-  const service = new GeniusLyricsService({ api: geniusApi, delay: 1000 })
+  const service = new GeniusLyricsService({ api: geniusApiLegacy, delay: 1000 })
   console.log(`Starting fetch for ${artists[0].name} (ID: ${artistId})`)
 
   const songs = await service.fetchSongsForArtist({ artistId, maxPages: 10 })

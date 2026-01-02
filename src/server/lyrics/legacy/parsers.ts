@@ -1,4 +1,4 @@
-import { ZSchema } from './schemas'
+import { ZSchema } from '../schemas'
 import type { z } from 'zod'
 
 type TSong = z.infer<typeof ZSchema.Genius.Song>

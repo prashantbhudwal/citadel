@@ -1,9 +1,9 @@
 import { z } from 'zod'
 import ky from 'ky'
-import { SongSchema } from './schemas'
-import { geniusApi } from './ky'
-import { extractLyricsFromHtml } from './parseHtml'
-import type { TGeniusApi } from './ky';
+import { SongSchema } from '../schemas'
+import { geniusApiLegacy } from './genius-api-ky'
+import { extractLyricsFromHtml } from '../parseHtml'
+import type { TGeniusApi } from './genius-api-ky'
 
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
@@ -23,7 +23,7 @@ async function fetchSongsPage({
   artistId: string
   page: number
 }): Promise<{ songs: Array<TSong>; nextPage: number | null }> {
-  const json: unknown = await geniusApi
+  const json: unknown = await geniusApiLegacy
     .get(`artists/${artistId}/songs`, {
       searchParams: {
         page: String(page),
