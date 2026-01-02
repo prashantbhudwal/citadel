@@ -7,7 +7,7 @@ export const citadelWorkflow = inngest.createFunction(
   async function ({ step, event }) {
     const { artistId, maxPages } = event.data
 
-    const songs = await step.invoke('sync_requested', {
+    const result = await step.invoke('sync-songs', {
       function: syncSongs,
       data: {
         artistId,
@@ -15,7 +15,7 @@ export const citadelWorkflow = inngest.createFunction(
       },
     })
 
-    songs.map((s) => s.full_title)
+    console.log(`Synced ${result.totalSynced} songs`)
     const embeddings = await step.run('embedLyrics', function () {
       console.log('the first step ran')
     })
