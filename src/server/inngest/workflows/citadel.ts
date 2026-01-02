@@ -1,17 +1,21 @@
 import { inngest } from '../client'
-import { fetchSongs } from '../functions/fetch-songs'
+import { syncSongs } from '../functions/sync-songs'
 
 export const citadelWorkflow = inngest.createFunction(
   { id: 'citadelWorkflow' },
   { event: 'pipelineTriggered' },
   async function ({ step, event }) {
-    await step.invoke('fetch-songs', {
-      function: fetchSongs,
+    const { artistId, maxPages } = event.data
+
+    const songs = await step.invoke('sync_requested', {
+      function: syncSongs,
       data: {
-        artistId: event.data.artistId,
-        maxPages: event.data.maxPages,
+        artistId,
+        maxPages,
       },
     })
+
+    songs.map((s) => s.full_title)
     const embeddings = await step.run('embedLyrics', function () {
       console.log('the first step ran')
     })

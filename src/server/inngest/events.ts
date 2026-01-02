@@ -5,7 +5,7 @@ export const eventsMap = {
     artistId: z.string(),
     maxPages: z.number().optional(),
   }),
-  'songs.fetch_requested': z.object({
+  'songs.sync_requested': z.object({
     artistId: z.string(),
     maxPages: z.number().optional(),
   }),
