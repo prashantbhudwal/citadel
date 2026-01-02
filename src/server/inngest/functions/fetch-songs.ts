@@ -1,6 +1,6 @@
-import { SongSchema } from '@/server/lyrics/schemas'
-import { inngest } from '../client'
 import z from 'zod'
+import { inngest } from '../client'
+import { SongSchema } from '@/server/lyrics/schemas'
 import { geniusApi } from '@/server/lyrics/ky'
 
 const SongsResponseSchema = z.object({
@@ -17,7 +17,7 @@ async function fetchSongsPage({
 }: {
   artistId: string
   page: number
-}): Promise<{ songs: TSong[]; nextPage: number | null }> {
+}): Promise<{ songs: Array<TSong>; nextPage: number | null }> {
   const json: unknown = await geniusApi
     .get(`artists/${artistId}/songs`, {
       searchParams: {
@@ -48,7 +48,7 @@ export const fetchSongs = inngest.createFunction(
     step,
   }) {
     let page: null | number = 1
-    let allSongs: TSong[] = []
+    const allSongs: Array<TSong> = []
     while (page) {
       const currentPage: number = page
       console.log(`Fetching page ${currentPage}...`)
@@ -56,7 +56,7 @@ export const fetchSongs = inngest.createFunction(
         const { nextPage, songs } = await step.run(
           `fetch-song-page-${currentPage}`,
           async function (): Promise<{
-            songs: TSong[]
+            songs: Array<TSong>
             nextPage: number | null
           }> {
             const result = await fetchSongsPage({ artistId, page: currentPage })

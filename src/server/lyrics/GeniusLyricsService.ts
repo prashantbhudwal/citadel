@@ -1,8 +1,9 @@
 import { z } from 'zod'
-import { SongSchema } from './schemas'
-import { geniusApi, TGeniusApi } from './ky'
 import ky from 'ky'
+import { SongSchema } from './schemas'
+import { geniusApi } from './ky'
 import { extractLyricsFromHtml } from './parseHtml'
+import type { TGeniusApi } from './ky';
 
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
@@ -21,7 +22,7 @@ async function fetchSongsPage({
 }: {
   artistId: string
   page: number
-}): Promise<{ songs: TSong[]; nextPage: number | null }> {
+}): Promise<{ songs: Array<TSong>; nextPage: number | null }> {
   const json: unknown = await geniusApi
     .get(`artists/${artistId}/songs`, {
       searchParams: {
@@ -73,9 +74,9 @@ export class GeniusLyricsService {
   }: {
     artistId: string
     maxPages?: number
-  }): Promise<TSong[]> {
+  }): Promise<Array<TSong>> {
     let page: null | number = 1
-    let allSongs: TSong[] = []
+    const allSongs: Array<TSong> = []
     while (page) {
       console.log(`Fetching page ${page}...`)
       try {
@@ -140,7 +141,7 @@ export class GeniusLyricsService {
     }
   }
 
-  async *runScraper({ songs }: { songs: TSong[] }) {
+  async *runScraper({ songs }: { songs: Array<TSong> }) {
     for (const song of songs) {
       const target = this.transformToScrapeTarget(song)
       const lyrics = await this.scrapeLyrics(target)

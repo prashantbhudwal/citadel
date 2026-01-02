@@ -1,10 +1,10 @@
-import { z } from 'zod'
+import { db } from '../prisma'
+import type { ZSchema } from './schemas'
+import type { z } from 'zod'
 import type {
   Artist as DbArtist,
   Song as DbSong,
 } from '@/generated/prisma/client'
-import { db } from '../prisma'
-import { ZSchema } from './schemas'
 
 type TSong = z.infer<typeof ZSchema.Genius.Song>
 type TArtist = z.infer<typeof ZSchema.Genius.Artist>
@@ -61,8 +61,8 @@ const toSongWriteData = (song: TSong) => ({
 function toZodSong(
   song: DbSong & {
     primaryArtist: DbArtist
-    primaryArtists: DbArtist[]
-    featuredArtists: DbArtist[]
+    primaryArtists: Array<DbArtist>
+    featuredArtists: Array<DbArtist>
   },
 ): TSong {
   return {
@@ -161,7 +161,7 @@ async function persistSongList({
   songs,
   artistId: _artistId, // Kept for interface compatibility, though usually derived from song
 }: {
-  songs: TSong[]
+  songs: Array<TSong>
   artistId: string
 }) {
   for (const song of songs) {
@@ -217,7 +217,7 @@ async function readSongList({
   artistId,
 }: {
   artistId: string
-}): Promise<TSong[]> {
+}): Promise<Array<TSong>> {
   // Query DB
 
   const primaryArtistId = Number.parseInt(artistId, 10)

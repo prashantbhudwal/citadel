@@ -1,8 +1,9 @@
 import ky from 'ky'
 import { extractLyricsFromHtml } from './parseHtml'
-import { SongSchema } from './schemas'
-import z from 'zod'
 import { wait } from './wait'
+import type z from 'zod'
+import type { SongSchema } from './schemas'
+
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
 export type ScrapeTarget = {
@@ -43,7 +44,7 @@ export function transformToScrapeTarget(song: TSong): ScrapeTarget {
   }
 }
 
-async function* runScraper({ songs }: { songs: TSong[] }) {
+async function* runScraper({ songs }: { songs: Array<TSong> }) {
   for (const song of songs) {
     const target = transformToScrapeTarget(song)
     const lyrics = await scrapeLyrics(target)

@@ -1,5 +1,5 @@
-import { BookCover } from '@/routes/dw/books/-components'
 import { createFileRoute } from '@tanstack/react-router'
+import { BookCover } from '@/routes/dw/books/-components'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,

@@ -1,14 +1,14 @@
-import { z } from 'zod'
 import { ZSchema } from './schemas'
+import type { z } from 'zod'
 
 type TSong = z.infer<typeof ZSchema.Genius.Song>
 
-function toJsonL(songs: TSong[]) {
+function toJsonL(songs: Array<TSong>) {
   const songsJsonL = songs.map((song) => JSON.stringify(song)).join('\n') + '\n'
   return songsJsonL
 }
 
-function fromJsonL(jsonL: string): TSong[] {
+function fromJsonL(jsonL: string): Array<TSong> {
   const lines = jsonL
     .split('\n')
     .map((l) => l.trim())

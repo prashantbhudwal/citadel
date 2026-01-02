@@ -1,9 +1,9 @@
-import z from 'zod'
-import { ZSchema } from './schemas'
-import path from 'path'
-import { promises as fsp } from 'fs'
-
+import path from 'node:path'
+import { promises as fsp } from 'node:fs'
 import { parseSongs } from './parsers'
+import type z from 'zod'
+import type { ZSchema } from './schemas'
+
 
 type TSong = z.infer<typeof ZSchema.Genius.Song>
 
@@ -18,7 +18,7 @@ async function persistSongList({
   songs,
   artistId,
 }: {
-  songs: TSong[]
+  songs: Array<TSong>
   artistId: string
 }) {
   const songsJsonL = parseSongs.toJsonL(songs)
@@ -32,7 +32,7 @@ async function readSongList({
   artistId,
 }: {
   artistId: string
-}): Promise<TSong[]> {
+}): Promise<Array<TSong>> {
   const dir = getArtistDir({ artistId })
   const filePath = path.join(dir, SONG_LIST_FILE_NAME)
 
