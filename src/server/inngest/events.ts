@@ -1,9 +1,14 @@
-import { z } from "zod";
+import { maxSize, z } from 'zod'
 
 export const eventsMap = {
-  "test/hello.world": z.object({
-    message: z.string(),
+  pipelineTriggered: z.object({
+    artistId: z.string(),
+    maxPages: z.number().optional(),
   }),
-} as const;
+  'songs.fetch_requested': z.object({
+    artistId: z.string(),
+    maxPages: z.number().optional(),
+  }),
+} as const
 
-export type CitadelEvents = typeof eventsMap;
+export type CitadelEvents = typeof eventsMap
