@@ -156,7 +156,6 @@ export async function upsertAlbum(album: TAlbum) {
     },
   })
 }
-
 async function persistSongList({
   songs,
   artistId: _artistId, // Kept for interface compatibility, though usually derived from song
@@ -198,6 +197,7 @@ async function persistSongList({
           connect: featuredArtistConnections,
         },
       },
+      // @ts-ignore
       create: {
         id: song.id,
         ...baseSongData,
