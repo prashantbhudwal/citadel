@@ -15,7 +15,8 @@
     "prisma:generate": "prisma generate",
     "prisma:db:push": "prisma db push",
     "prisma:studio": "prisma studio",
-    "inngest:dev": "inngest-cli dev"
+    "inngest:dev": "inngest-cli dev",
+    "reset": "tsx scripts/reset-db.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "3.0.0",
