@@ -18,80 +18,62 @@ model Artist {
   slug              String
   url               String
   iq                Int?
-  // Relations
-  songsPrimary      Song[]  @relation("SongPrimaryArtist")
-  songsPrimaryList  Song[]  @relation("SongPrimaryArtistsList")
-  songsFeatured     Song[]  @relation("SongFeaturedArtistsList")
   albumsPrimary     Album[] @relation("AlbumPrimaryArtist")
+  songsPrimary      Song[]  @relation("SongPrimaryArtist")
   albumsPrimaryList Album[] @relation("AlbumPrimaryArtistsList")
+  songsFeatured     Song[]  @relation("SongFeaturedArtistsList")
+  songsPrimaryList  Song[]  @relation("SongPrimaryArtistsList")
 }
 
 model Album {
-  id                 Int    @id
-  apiPath            String @map("api_path")
-  fullTitle          String @map("full_title")
+  id                 Int      @id
+  apiPath            String   @map("api_path")
+  fullTitle          String   @map("full_title")
   name               String
-  nameWithArtist     String @map("name_with_artist")
-  primaryArtistNames String @map("primary_artist_names")
+  nameWithArtist     String   @map("name_with_artist")
+  primaryArtistNames String   @map("primary_artist_names")
   url                String
-
-  // Flattened ReleaseDateComponents
-  releaseDateYear  Int? @map("release_date_year")
-  releaseDateMonth Int? @map("release_date_month")
-  releaseDateDay   Int? @map("release_date_day")
-
-  // Relations
-  artistId       Int      @map("artist_id")
-  artist         Artist   @relation("AlbumPrimaryArtist", fields: [artistId], references: [id])
-  primaryArtists Artist[] @relation("AlbumPrimaryArtistsList")
-
-  songsMain Song[] @relation("SongAlbum")
-  songs     Song[] @relation("SongAlbumsList")
+  releaseDateYear    Int?     @map("release_date_year")
+  releaseDateMonth   Int?     @map("release_date_month")
+  releaseDateDay     Int?     @map("release_date_day")
+  artistId           Int      @map("artist_id")
+  artist             Artist   @relation("AlbumPrimaryArtist", fields: [artistId], references: [id])
+  songsMain          Song[]   @relation("SongAlbum")
+  primaryArtists     Artist[] @relation("AlbumPrimaryArtistsList")
+  songs              Song[]   @relation("SongAlbumsList")
 }
 
 model Song {
-  id              Int    @id
-  annotationCount Int    @map("annotation_count")
-  apiPath         String @map("api_path")
-  artistNames     String @map("artist_names")
-  fullTitle       String @map("full_title")
-
+  id                         Int      @id
+  annotationCount            Int      @map("annotation_count")
+  apiPath                    String   @map("api_path")
+  artistNames                String   @map("artist_names")
+  fullTitle                  String   @map("full_title")
   instrumental               Boolean
-  lyricsOwnerId              Int     @map("lyrics_owner_id")
-  lyricsState                String  @map("lyrics_state")
-  lyricsUpdatedAt            Int?    @map("lyrics_updated_at")
+  lyricsOwnerId              Int      @map("lyrics_owner_id")
+  lyricsState                String   @map("lyrics_state")
+  lyricsUpdatedAt            Int?     @map("lyrics_updated_at")
   path                       String
-  primaryArtistNames         String  @map("primary_artist_names")
-  pyongsCount                Int?    @map("pyongs_count")
-  relationshipsIndexUrl      String  @map("relationships_index_url")
-  statsUnreviewedAnnotations Int     @map("stats_unreviewed_annotations")
-  statsHot                   Boolean @map("stats_hot")
+  primaryArtistNames         String   @map("primary_artist_names")
+  pyongsCount                Int?     @map("pyongs_count")
+  relationshipsIndexUrl      String   @map("relationships_index_url")
+  statsUnreviewedAnnotations Int      @map("stats_unreviewed_annotations")
+  statsHot                   Boolean  @map("stats_hot")
   title                      String
-  titleWithFeatured          String  @map("title_with_featured")
-  updatedByHumanAt           Int     @map("updated_by_human_at")
+  titleWithFeatured          String   @map("title_with_featured")
+  updatedByHumanAt           Int      @map("updated_by_human_at")
   url                        String
-
-  // From ZSongMetadata
-  language String?
-
-  // From ZRawLyrics
-  lyrics String?
-
-  // From ZTrackProcessed (stored as JSON)
-  processedLyrics String? @map("processed_lyrics") // Storing JSON string or use Json type if supported by DB/Prisma version for SQLite
-
-  // Flattened ReleaseDateComponents
-  releaseDateYear  Int? @map("release_date_year")
-  releaseDateMonth Int? @map("release_date_month")
-  releaseDateDay   Int? @map("release_date_day")
-
-  // Relations
-  primaryArtistId Int      @map("primary_artist_id")
-  primaryArtist   Artist   @relation("SongPrimaryArtist", fields: [primaryArtistId], references: [id])
-  primaryArtists  Artist[] @relation("SongPrimaryArtistsList")
-  featuredArtists Artist[] @relation("SongFeaturedArtistsList")
-
-  albumId Int?    @map("album_id")
-  album   Album?  @relation("SongAlbum", fields: [albumId], references: [id])
-  albums  Album[] @relation("SongAlbumsList")
+  language                   String?
+  lyrics                     String?
+  processedLyrics            String?  @map("processed_lyrics")
+  releaseDateYear            Int?     @map("release_date_year")
+  releaseDateMonth           Int?     @map("release_date_month")
+  releaseDateDay             Int?     @map("release_date_day")
+  primaryArtistId            Int      @map("primary_artist_id")
+  albumId                    Int?     @map("album_id")
+  album                      Album?   @relation("SongAlbum", fields: [albumId], references: [id])
+  primaryArtist              Artist   @relation("SongPrimaryArtist", fields: [primaryArtistId], references: [id])
+  albums                     Album[]  @relation("SongAlbumsList")
+  featuredArtists            Artist[] @relation("SongFeaturedArtistsList")
+  primaryArtists             Artist[] @relation("SongPrimaryArtistsList")
 }

@@ -2,8 +2,7 @@ import path from 'node:path'
 import { promises as fsp } from 'node:fs'
 import { parseSongs } from './parsers'
 import type z from 'zod'
-import type { ZSchema } from './schemas'
-
+import type { ZSchema } from '../schemas'
 
 type TSong = z.infer<typeof ZSchema.Genius.Song>
 
