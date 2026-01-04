@@ -12,6 +12,10 @@ export const eventsMap = {
   'songs.sync.metadata_requested': z.object({
     songId: z.number(),
   }),
+  'songs.sync.lyrics_requested': z.object({
+    songUrl: z.string(),
+    songId: z.number(),
+  }),
 } as const
 
 export type CitadelEvents = typeof eventsMap

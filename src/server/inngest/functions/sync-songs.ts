@@ -2,6 +2,7 @@ import { inngest } from '../client'
 import { fetchSongsPage, type TSong } from '@/server/lyrics/genius-api'
 import { persistSongBatch } from '@/server/lyrics/db'
 import { syncMetadata } from './sync-metadata'
+import { syncLyrics } from './sync-lyrics'
 
 export const syncSongs = inngest.createFunction(
   { id: 'sync-songs' },
@@ -36,6 +37,15 @@ export const syncSongs = inngest.createFunction(
               step.invoke(`fetch-metadata-${song.id}`, {
                 function: syncMetadata,
                 data: { songId: song.id },
+              }),
+            ),
+          )
+
+          await Promise.all(
+            songs.map((song) =>
+              step.invoke(`scrape-lyrics-${song.id}`, {
+                function: syncLyrics,
+                data: { songId: song.id, songUrl: song.url },
               }),
             ),
           )

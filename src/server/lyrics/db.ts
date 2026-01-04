@@ -150,3 +150,13 @@ export async function persistSongMetadata(
     },
   })
 }
+
+export async function persistLyrics(songId: number, lyrics: string | null) {
+  await db.song.update({
+    where: { id: songId },
+    data: {
+      lyrics: lyrics,
+      lyricsFetchedAt: new Date(),
+    },
+  })
+}

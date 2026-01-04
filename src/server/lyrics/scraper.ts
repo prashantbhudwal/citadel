@@ -1,22 +1,53 @@
 import ky from 'ky'
-import { extractLyricsFromHtml } from './parseHtml'
-import { wait } from './legacy/wait'
-import type z from 'zod'
-import type { SongSchema } from './schemas'
+import * as cheerio from 'cheerio'
 
 const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-export type ScrapeTarget = {
-  id: number
-  title: string
-  url: string
-}
-type TSong = z.infer<typeof SongSchema>
 
-async function scrapeLyrics(target: ScrapeTarget): Promise<string | null> {
-  console.log(`Scraping lyrics for ${target.title} (${target.url})...`)
+export function extractLyricsFromHtml(html: string): string | null {
+  const $ = cheerio.load(html)
+  let lyrics = ''
+
+  // Selector 1: data-lyrics-container (modern Genius)
+  const container = $('[data-lyrics-container="true"]')
+  if (container.length > 0) {
+    // Remove unnecessary elements before extracting text
+    $('[data-exclude-from-selection="true"]').remove() // Header/description
+    $('div[class^="LyricsHeader__Container"]').remove() // Header container
+    $('span[style*="position:absolute"]').remove() // Invisible focus traps
+    $('svg').remove() // Icons
+    $('noscript').remove() // Empty placeholders
+
+    container.find('br').replaceWith('\n')
+    lyrics = container.text()
+  } else {
+    // Selector 2: .lyrics (older Genius)
+    const oldContainer = $('.lyrics')
+    if (oldContainer.length > 0) {
+      lyrics = oldContainer.text()
+    } else {
+      const classContainer = $('div[class^="Lyrics__Container"]')
+      if (classContainer.length > 0) {
+        classContainer.find('br').replaceWith('\n')
+        lyrics = classContainer.text()
+      }
+    }
+  }
+
+  if (!lyrics) {
+    return null
+  }
+
+  return lyrics.trim()
+}
+
+export async function scrapeLyrics({
+  songUrl,
+}: {
+  songUrl: string
+}): Promise<string | null> {
   try {
-    const html = await ky(target.url, {
+    const html = await ky(songUrl, {
       headers: {
         'User-Agent': USER_AGENT,
       },
@@ -25,34 +56,13 @@ async function scrapeLyrics(target: ScrapeTarget): Promise<string | null> {
     const lyrics = extractLyricsFromHtml(html)
 
     if (!lyrics) {
-      console.warn(`No lyrics found for ${target.title}`)
+      console.warn(`No lyrics found for ${songUrl}`)
       return null
     }
 
     return lyrics
   } catch (error) {
-    console.error(`Failed to scrape ${target.title}:`, error)
+    console.error(`Failed to scrape ${songUrl}:`, error)
     return null
-  }
-}
-
-export function transformToScrapeTarget(song: TSong): ScrapeTarget {
-  return {
-    id: song.id,
-    title: song.title,
-    url: song.url,
-  }
-}
-
-async function* runScraper({ songs }: { songs: Array<TSong> }) {
-  for (const song of songs) {
-    const target = transformToScrapeTarget(song)
-    const lyrics = await scrapeLyrics(target)
-
-    if (lyrics) {
-      yield { ...song, lyrics }
-    }
-
-    await wait()
   }
 }

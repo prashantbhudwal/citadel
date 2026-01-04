@@ -82,4 +82,5 @@ model Song {
   recordingLocation          String?   @map("recording_location")
   writerArtists              Artist[]  @relation("SongWriterArtistsList")
   metadataFetchedAt          DateTime? @map("metadata_fetched_at")
+  lyricsFetchedAt            DateTime? @map("lyrics_fetched_at")
 }

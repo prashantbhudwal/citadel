@@ -2,7 +2,7 @@ import { z } from 'zod'
 import ky from 'ky'
 import { SongSchema } from '../schemas'
 import { geniusApiLegacy } from './genius-api-ky'
-import { extractLyricsFromHtml } from '../parseHtml'
+import { extractLyricsFromHtml } from './parseHtml'
 import type { TGeniusApi } from './genius-api-ky'
 
 const USER_AGENT =
