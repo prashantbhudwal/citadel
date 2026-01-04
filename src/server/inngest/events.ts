@@ -2,12 +2,15 @@ import { maxSize, z } from 'zod'
 
 export const eventsMap = {
   pipelineTriggered: z.object({
-    artistId: z.string(),
+    artistId: z.number(),
     maxPages: z.number().optional(),
   }),
   'songs.sync_requested': z.object({
-    artistId: z.string(),
+    artistId: z.number(),
     maxPages: z.number().optional(),
+  }),
+  'songs.sync.metadata_requested': z.object({
+    songId: z.number(),
   }),
 } as const
 

@@ -1,6 +1,7 @@
 import { inngest } from '../client'
 import { fetchSongsPage, type TSong } from '@/server/lyrics/genius-api'
 import { persistSongBatch } from '@/server/lyrics/db'
+import { syncMetadata } from './sync-metadata'
 
 export const syncSongs = inngest.createFunction(
   { id: 'sync-songs' },
@@ -24,9 +25,19 @@ export const syncSongs = inngest.createFunction(
           await step.run(`persist-page-${currentPage}`, () =>
             persistSongBatch(songs),
           )
+
           totalSynced += songs.length
           console.log(
             `Page ${currentPage}: synced ${songs.length} songs. Next: ${nextPage}`,
+          )
+
+          await Promise.all(
+            songs.map((song) =>
+              step.invoke(`fetch-metadata-${song.id}`, {
+                function: syncMetadata,
+                data: { songId: song.id },
+              }),
+            ),
           )
         } else {
           console.log(`No songs on page ${currentPage}. Stopping.`)

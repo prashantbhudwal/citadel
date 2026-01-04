@@ -23,6 +23,7 @@ model Artist {
   albumsPrimaryList Album[] @relation("AlbumPrimaryArtistsList")
   songsFeatured     Song[]  @relation("SongFeaturedArtistsList")
   songsPrimaryList  Song[]  @relation("SongPrimaryArtistsList")
+  songsWriter       Song[]  @relation("SongWriterArtistsList")
 }
 
 model Album {
@@ -44,36 +45,41 @@ model Album {
 }
 
 model Song {
-  id                         Int      @id
-  annotationCount            Int      @map("annotation_count")
-  apiPath                    String   @map("api_path")
-  artistNames                String   @map("artist_names")
-  fullTitle                  String   @map("full_title")
+  id                         Int       @id
+  annotationCount            Int       @map("annotation_count")
+  apiPath                    String    @map("api_path")
+  artistNames                String    @map("artist_names")
+  fullTitle                  String    @map("full_title")
   instrumental               Boolean
-  lyricsOwnerId              Int      @map("lyrics_owner_id")
-  lyricsState                String   @map("lyrics_state")
-  lyricsUpdatedAt            Int?     @map("lyrics_updated_at")
+  lyricsOwnerId              Int       @map("lyrics_owner_id")
+  lyricsState                String    @map("lyrics_state")
+  lyricsUpdatedAt            Int?      @map("lyrics_updated_at")
   path                       String
-  primaryArtistNames         String   @map("primary_artist_names")
-  pyongsCount                Int?     @map("pyongs_count")
-  relationshipsIndexUrl      String   @map("relationships_index_url")
-  statsUnreviewedAnnotations Int      @map("stats_unreviewed_annotations")
-  statsHot                   Boolean  @map("stats_hot")
+  primaryArtistNames         String    @map("primary_artist_names")
+  pyongsCount                Int?      @map("pyongs_count")
+  relationshipsIndexUrl      String    @map("relationships_index_url")
+  statsUnreviewedAnnotations Int       @map("stats_unreviewed_annotations")
+  statsHot                   Boolean   @map("stats_hot")
   title                      String
-  titleWithFeatured          String   @map("title_with_featured")
-  updatedByHumanAt           Int      @map("updated_by_human_at")
+  titleWithFeatured          String    @map("title_with_featured")
+  updatedByHumanAt           Int       @map("updated_by_human_at")
   url                        String
   language                   String?
   lyrics                     String?
-  processedLyrics            String?  @map("processed_lyrics")
-  releaseDateYear            Int?     @map("release_date_year")
-  releaseDateMonth           Int?     @map("release_date_month")
-  releaseDateDay             Int?     @map("release_date_day")
-  primaryArtistId            Int      @map("primary_artist_id")
-  albumId                    Int?     @map("album_id")
-  album                      Album?   @relation("SongAlbum", fields: [albumId], references: [id])
-  primaryArtist              Artist   @relation("SongPrimaryArtist", fields: [primaryArtistId], references: [id])
-  albums                     Album[]  @relation("SongAlbumsList")
-  featuredArtists            Artist[] @relation("SongFeaturedArtistsList")
-  primaryArtists             Artist[] @relation("SongPrimaryArtistsList")
+  processedLyrics            String?   @map("processed_lyrics")
+  releaseDateYear            Int?      @map("release_date_year")
+  releaseDateMonth           Int?      @map("release_date_month")
+  releaseDateDay             Int?      @map("release_date_day")
+  primaryArtistId            Int       @map("primary_artist_id")
+  albumId                    Int?      @map("album_id")
+  album                      Album?    @relation("SongAlbum", fields: [albumId], references: [id])
+  primaryArtist              Artist    @relation("SongPrimaryArtist", fields: [primaryArtistId], references: [id])
+  albums                     Album[]   @relation("SongAlbumsList")
+  featuredArtists            Artist[]  @relation("SongFeaturedArtistsList")
+  primaryArtists             Artist[]  @relation("SongPrimaryArtistsList")
+  explicit                   Boolean?
+  isMusic                    Boolean?  @map("is_music")
+  recordingLocation          String?   @map("recording_location")
+  writerArtists              Artist[]  @relation("SongWriterArtistsList")
+  metadataFetchedAt          DateTime? @map("metadata_fetched_at")
 }

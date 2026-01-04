@@ -15,6 +15,8 @@ export const citadelWorkflow = inngest.createFunction(
       },
     })
 
+    
+
     console.log(`Synced ${result.totalSynced} songs`)
     const embeddings = await step.run('embedLyrics', function () {
       console.log('the first step ran')

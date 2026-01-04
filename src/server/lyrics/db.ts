@@ -1,7 +1,10 @@
 import { db } from '@/server/prisma'
 import type { TSong } from './genius-api'
+import { ZSchema } from './schemas'
+import type { z } from 'zod'
 
 type TArtist = TSong['primary_artist']
+type TSongMetadata = z.infer<typeof ZSchema.Genius.SongMetadata>
 
 async function upsertArtist(artist: TArtist) {
   return db.artist.upsert({
@@ -119,4 +122,31 @@ export async function persistSongBatch(songs: TSong[]) {
       })
     }
   }
+}
+
+export async function persistSongMetadata(
+  songId: number,
+  metadata: TSongMetadata,
+) {
+  // 1. Upsert all writer artists first
+  for (const artist of metadata.writer_artists) {
+    await upsertArtist(artist)
+  }
+
+  // 2. Update song with metadata fields + set writerArtists relation
+  const writerArtistIds = metadata.writer_artists.map((a) => a.id)
+
+  await db.song.update({
+    where: { id: songId },
+    data: {
+      language: metadata.language ?? null,
+      explicit: metadata.explicit,
+      isMusic: metadata.is_music,
+      recordingLocation: metadata.recording_location,
+      metadataFetchedAt: new Date(),
+      writerArtists: {
+        set: writerArtistIds.map((id) => ({ id })),
+      },
+    },
+  })
 }

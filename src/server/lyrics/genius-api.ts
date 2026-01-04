@@ -1,5 +1,5 @@
 import z from 'zod'
-import { SongSchema } from '@/server/lyrics/schemas'
+import { SongSchema, ZSchema } from '@/server/lyrics/schemas'
 import ky from 'ky'
 
 export const geniusApi = ky.create({
@@ -30,7 +30,7 @@ export async function fetchSongsPage({
   artistId,
   page,
 }: {
-  artistId: string
+  artistId: number
   page: number
 }): Promise<{ songs: Array<TSong>; nextPage: number | null }> {
   const json: unknown = await geniusApi
@@ -52,4 +52,21 @@ export async function fetchSongsPage({
     songs: result.data.response.songs,
     nextPage: result.data.response.next_page,
   }
+}
+
+const MetadataResponseSchema = z.object({
+  response: z.object({
+    song: ZSchema.Genius.SongMetadata,
+  }),
+})
+
+export async function fetchSongMetadata({ songId }: { songId: number }) {
+  const json: unknown = await geniusApi.get(`songs/${songId}`).json()
+
+  const result = MetadataResponseSchema.safeParse(json)
+  if (!result.success) {
+    throw result.error
+  }
+  console.log(result.data.response.song)
+  return { metadata: result.data.response.song }
 }

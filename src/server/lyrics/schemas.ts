@@ -103,8 +103,14 @@ export const SongSchema = z.object({
 
 const ZSongMetadata = z.object({
   language: z.string().nullish(),
-  album: AlbumSchema,
+  album: AlbumSchema.nullable(),
   albums: z.array(AlbumSchema),
+  explicit: z.boolean().nullable(),
+  is_music: z.boolean().nullable(),
+  recording_location: z.string().nullable(),
+  writer_artists: z
+    .array(ArtistSchema)
+    .describe('Array of writers of the song.'),
 })
 
 const ZSongWithMetadata = SongSchema.extend(ZSongMetadata.shape)
