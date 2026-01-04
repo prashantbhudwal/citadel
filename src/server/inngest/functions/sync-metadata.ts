@@ -8,6 +8,10 @@ export const syncMetadata = inngest.createFunction(
     concurrency: {
       limit: 10,
     },
+    throttle: {
+      limit: 5,
+      period: '1s',
+    },
   },
   { event: 'songs.sync.metadata_requested' },
   async function ({ step, event }) {
