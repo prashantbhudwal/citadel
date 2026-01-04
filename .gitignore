@@ -16,4 +16,6 @@ plan
 data
 src/generated
 dev.db
+snapshot-*.db
+prisma/archives/
 .gemini
