@@ -9,7 +9,7 @@ export const syncMetadata = inngest.createFunction(
       limit: 10,
     },
     throttle: {
-      limit: 5,
+      limit: 10,
       period: '1s',
     },
   },

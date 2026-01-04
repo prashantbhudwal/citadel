@@ -6,10 +6,10 @@ export const syncLyrics = inngest.createFunction(
   {
     id: 'sync-lyrics',
     concurrency: {
-      limit: 10,
+      limit: 5,
     },
     throttle: {
-      limit: 5,
+      limit: 3,
       period: '1s',
     },
   },
