@@ -16,6 +16,17 @@ export const eventsMap = {
     songUrl: z.string(),
     songId: z.number(),
   }),
+  'songs.process_page_requested': z.object({
+    songs: z.array(
+      z.object({
+        id: z.number(),
+        url: z.string(),
+      }),
+    ),
+  }),
+  'song.processing_requested': z.object({
+    maxSongs: z.number().optional(),
+  }),
 } as const
 
 export type CitadelEvents = typeof eventsMap

@@ -1,8 +1,7 @@
 import { inngest } from '../client'
 import { fetchSongsPage, type TSong } from '@/server/lyrics/genius-api'
 import { persistSongBatch } from '@/server/lyrics/db'
-import { syncMetadata } from './sync-metadata'
-import { syncLyrics } from './sync-lyrics'
+import { processPage } from './process-page'
 
 export const syncSongs = inngest.createFunction(
   { id: 'sync-songs' },
@@ -32,23 +31,15 @@ export const syncSongs = inngest.createFunction(
             `Page ${currentPage}: synced ${songs.length} songs. Next: ${nextPage}`,
           )
 
-          await Promise.all(
-            songs.map((song) =>
-              step.invoke(`fetch-metadata-${song.id}`, {
-                function: syncMetadata,
-                data: { songId: song.id },
-              }),
-            ),
-          )
-
-          await Promise.all(
-            songs.map((song) =>
-              step.invoke(`scrape-lyrics-${song.id}`, {
-                function: syncLyrics,
-                data: { songId: song.id, songUrl: song.url },
-              }),
-            ),
-          )
+          // Invoke the processPage child function for this page
+          // This counts as 1 step, and the child function handles
+          // all metadata + lyrics fetching with its own step limit
+          await step.invoke(`process-page-${currentPage}`, {
+            function: processPage,
+            data: {
+              songs: songs.map((s) => ({ id: s.id, url: s.url })),
+            },
+          })
         } else {
           console.log(`No songs on page ${currentPage}. Stopping.`)
           break
