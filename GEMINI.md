@@ -24,8 +24,9 @@ src/server/
 │   ├── options.ts          # Shared Inngest serve options
 │   ├── functions/
 │   │   ├── sync-songs.ts     # Fetches and persists songs per page
-│   │   ├── sync-metadata.ts  # Enriches songs with metadata (album, writers, etc.)
-│   │   ├── sync-lyrics.ts    # Scrapes lyrics from Genius pages
+│   │   ├── sync-metadata.ts  # Enriches songs with metadata (throttle: 10/s)
+│   │   ├── sync-lyrics.ts    # Scrapes lyrics from Genius pages (throttle: 3/s)
+│   │   ├── process-page.ts   # Fan-out: invokes metadata+lyrics for one page
 │   │   └── process-songs.ts  # Post-processing for songs
 │   └── workflows/
 │       └── citadel.ts        # Top-level pipeline orchestrator
@@ -72,6 +73,18 @@ throttle: { limit: 5, period: '1s' }
 rateLimit: { limit: 5, period: '1s' }
 ```
 
+### 1000 Step Limit & Fan-Out Pattern
+
+- **Each function has a 1000 step limit.** `step.run`, `step.invoke`, `step.sendEvent`, `step.sleep` each count as 1 step.
+- **Fan-out pattern**: If processing N items, use a child function per batch to stay under the limit:
+  - Parent (`sync-songs`) invokes `process-page` once per page (~4 steps/page)
+  - Child (`process-page`) invokes `sync-metadata` and `sync-lyrics` per song (~100 steps/page)
+  - Each child function has its own 1000 step budget.
+- **`step.invoke` vs `step.sendEvent`**:
+  - `step.invoke` — waits for child to complete (provides backpressure)
+  - `step.sendEvent` — fire-and-forget (can flood the system if not careful)
+- **Always use `Promise.all`** when invoking multiple child functions to leverage throttle config.
+
 ## Common Commands
 
 ```bash
@@ -88,12 +101,19 @@ npx prisma generate
 
 # Create migration
 npx prisma migrate dev --name <description>
+
+# Database snapshots
+pnpm db:snapshot    # Creates timestamped backup + updates snapshot-latest.db
+pnpm db:restore     # Archives current state, restores from snapshot-latest.db
+pnpm db:analyze     # Generates statistical analysis to data/db-analysis.md
 ```
 
 ## Gotchas
 
 - **Genius API Rate Limits**: Use 1-second delays between page fetches or `throttle` config.
+- **Cloudflare Error 1015**: Flooding requests will get your IP blocked (10-60 min ban). Always use throttled functions with backpressure.
 - **SQLite Write Locking**: Keep transactions short (≤50 items).
 - **Prisma Type Conflicts**: If you see "Types of property 'primaryArtist' are incompatible", you're mixing Checked and Unchecked input modes.
 - **Zod Nullable Fields**: API may return `null` for optional fields (e.g., `album`, `recording_location`). Use `.nullable()` in Zod schemas.
 - **HTML Cleanup**: When scraping lyrics, remove `[data-exclude-from-selection]`, invisible spans, SVGs, and `LyricsHeader__Container` before extracting text.
+- **Inngest Step Limit**: Functions exceeding 1000 steps fail with `InngestErrFunctionOverflowed`. Use fan-out pattern.
