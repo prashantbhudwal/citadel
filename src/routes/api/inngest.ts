@@ -1,15 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { serve } from 'inngest/edge'
-import { inngest } from '@/server/inngest/client'
-import { citadelWorkflow } from '@/server/inngest/workflows/citadel'
-import { syncSongs } from '@/server/inngest/functions/sync-songs'
-import { syncMetadata } from '@/server/inngest/functions/sync-metadata'
+import { inngestOptions } from '@/server/inngest/options'
 
-const handler = serve({
-  client: inngest,
-  functions: [citadelWorkflow, syncSongs, syncMetadata],
-  streaming: 'force', // Search result recommended this
-})
+const handler = serve(inngestOptions)
 
 export const Route = createFileRoute('/api/inngest')({
   server: {
