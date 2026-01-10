@@ -5,6 +5,45 @@ import type { z } from 'zod'
 
 type TArtist = TSong['primary_artist']
 type TSongMetadata = z.infer<typeof ZSchema.Genius.SongMetadata>
+type TAlbum = NonNullable<TSongMetadata['album']>
+
+async function upsertAlbum(album: TAlbum) {
+  const rdc = album.release_date_components
+
+  // Ensure artist exists for the album
+  if (album.artist) {
+    await upsertArtist(album.artist)
+  }
+
+  return db.album.upsert({
+    where: { id: album.id },
+    update: {
+      apiPath: album.api_path,
+      fullTitle: album.full_title,
+      name: album.name,
+      nameWithArtist: album.name_with_artist,
+      primaryArtistNames: album.primary_artist_names,
+      url: album.url,
+      releaseDateYear: rdc?.year ?? null,
+      releaseDateMonth: rdc?.month ?? null,
+      releaseDateDay: rdc?.day ?? null,
+      artistId: album.artist.id,
+    },
+    create: {
+      id: album.id,
+      apiPath: album.api_path,
+      fullTitle: album.full_title,
+      name: album.name,
+      nameWithArtist: album.name_with_artist,
+      primaryArtistNames: album.primary_artist_names,
+      url: album.url,
+      releaseDateYear: rdc?.year ?? null,
+      releaseDateMonth: rdc?.month ?? null,
+      releaseDateDay: rdc?.day ?? null,
+      artistId: album.artist.id,
+    },
+  })
+}
 
 async function upsertArtist(artist: TArtist) {
   return db.artist.upsert({
@@ -133,8 +172,21 @@ export async function persistSongMetadata(
     await upsertArtist(artist)
   }
 
-  // 2. Update song with metadata fields + set writerArtists relation
+  // 2. Upsert (Primary) Album if present
+  if (metadata.album) {
+    await upsertAlbum(metadata.album)
+  }
+
+  // 3. Upsert (Secondary) Albums list if present
+  if (metadata.albums && metadata.albums.length > 0) {
+    for (const album of metadata.albums) {
+      await upsertAlbum(album)
+    }
+  }
+
+  // 4. Update song with metadata fields + relations
   const writerArtistIds = metadata.writer_artists.map((a) => a.id)
+  const albumIds = metadata.albums?.map((a) => a.id) ?? []
 
   await db.song.update({
     where: { id: songId },
@@ -146,6 +198,12 @@ export async function persistSongMetadata(
       metadataFetchedAt: new Date(),
       writerArtists: {
         set: writerArtistIds.map((id) => ({ id })),
+      },
+      // Link primary album if exists
+      ...(metadata.album ? { albumId: metadata.album.id } : {}),
+      // Link all associated albums
+      albums: {
+        set: albumIds.map((id) => ({ id })),
       },
     },
   })

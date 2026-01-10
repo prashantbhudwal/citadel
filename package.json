@@ -16,10 +16,10 @@
     "prisma:db:push": "prisma db push",
     "prisma:studio": "prisma studio",
     "inngest:dev": "inngest-cli dev",
-    "reset": "tsx scripts/reset-db.ts",
-    "db:snapshot": "tsx scripts/db-snapshot.ts",
-    "db:restore": "tsx scripts/db-restore.ts",
-    "db:analyze": "tsx scripts/db-analyze.ts"
+    "reset": "tsx scripts/db/reset-db.ts",
+    "db:snapshot": "tsx scripts/db/db-snapshot.ts",
+    "db:restore": "tsx scripts/db/db-restore.ts",
+    "db:analyze": "tsx scripts/db/db-analyze.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "3.0.0",
