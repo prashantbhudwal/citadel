@@ -1,4 +1,5 @@
 import { inngest } from '../client'
+import { processSongs } from '../functions/process-songs'
 import { syncSongs } from '../functions/sync-songs'
 
 export const citadelWorkflow = inngest.createFunction(
@@ -15,7 +16,12 @@ export const citadelWorkflow = inngest.createFunction(
       },
     })
 
-    
+    await step.invoke('process-songs', {
+      function: processSongs,
+      data: {
+        maxSongs: 10,
+      },
+    })
 
     console.log(`Synced ${result.totalSynced} songs`)
     const embeddings = await step.run('embedLyrics', function () {

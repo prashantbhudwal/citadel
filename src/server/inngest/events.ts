@@ -27,6 +27,7 @@ export const eventsMap = {
   'song.processing_requested': z.object({
     maxSongs: z.number().optional(),
   }),
+  'admin.backfill_albums_requested': z.object({}),
 } as const
 
 export type CitadelEvents = typeof eventsMap

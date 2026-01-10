@@ -4,6 +4,7 @@ import { syncLyrics } from './functions/sync-lyrics'
 import { syncMetadata } from './functions/sync-metadata'
 import { syncSongs } from './functions/sync-songs'
 import { citadelWorkflow } from './workflows/citadel'
+import { backfillAlbums } from './functions/backfill-albums'
 import { type ServeHandlerOptions } from 'inngest'
 
 export const inngestOptions: ServeHandlerOptions = {
@@ -14,6 +15,7 @@ export const inngestOptions: ServeHandlerOptions = {
     syncMetadata,
     syncLyrics,
     processPage,
+    backfillAlbums,
   ],
   streaming: 'force',
 }
