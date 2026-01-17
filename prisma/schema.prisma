@@ -83,6 +83,7 @@ model Song {
   writerArtists              Artist[]      @relation("SongWriterArtistsList")
   metadataFetchedAt          DateTime?     @map("metadata_fetched_at")
   lyricsFetchedAt            DateTime?     @map("lyrics_fetched_at")
+  lyricsHash                 String?       @map("lyrics_hash")
   analysis                   SongAnalysis?
 }
 
@@ -90,10 +91,11 @@ model SongAnalysis {
   songId Int  @id @map("song_id")
   song   Song @relation(fields: [songId], references: [id])
 
-  // Classifications
-  isFreestyle Boolean? @map("is_freestyle")
-  isSolo      Boolean? @map("is_solo")
-  isRendition Boolean? @map("is_rendition")
+  isFreestyle        Boolean? @map("is_freestyle")
+  wordCount          Int?     @map("word_count")
+  hasFeatures        Boolean? @map("has_features")
+  hasSuspiciousTitle Boolean? @map("has_suspicious_title")
+  isDuplicate        Boolean? @map("is_duplicate")
 
   // Tracking
   analyzedAt DateTime? @map("analyzed_at")
