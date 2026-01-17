@@ -1,6 +1,15 @@
-import { error } from 'node:console'
-import { runScraper } from './server/lyrics/legacy'
-import { fetchSongMetadata } from './server/lyrics/genius-api'
-;[1, 2, 3, 234, 207].map((songId) =>
-  fetchSongMetadata({ songId: songId }).catch(error),
-)
+import { updateAllSongHashes } from './server/lyrics/db/backfill-songs-hashes'
+
+export async function run() {
+  await updateAllSongHashes()
+}
+
+run()
+  .then(() => {
+    console.log('Done')
+    process.exit(0)
+  })
+  .catch((error) => {
+    console.error(error)
+    process.exit(1)
+  })
