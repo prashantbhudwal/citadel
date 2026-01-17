@@ -96,7 +96,4 @@ model SongAnalysis {
   hasFeatures        Boolean? @map("has_features")
   hasSuspiciousTitle Boolean? @map("has_suspicious_title")
   isDuplicate        Boolean? @map("is_duplicate")
-
-  // Tracking
-  analyzedAt DateTime? @map("analyzed_at")
 }

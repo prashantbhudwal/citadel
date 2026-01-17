@@ -21,3 +21,6 @@ prisma/archives/
 .gemini
 nvim
 dotfiles
+notes.llm.md
+.gitignore
+docs/ANALYSIS_ARCHITECTURE.md
