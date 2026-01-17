@@ -1,6 +1,6 @@
 import { fetchSongMetadata } from '@/server/lyrics/genius-api'
 import { inngest } from '../client'
-import { persistSongMetadata } from '@/server/lyrics/db'
+import { persistSongMetadata } from '@/server/lyrics/db/db'
 import { db } from '@/server/prisma'
 
 export const syncMetadata = inngest.createFunction(

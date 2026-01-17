@@ -1,6 +1,6 @@
 import { db } from '@/server/prisma'
-import type { TSong } from './genius-api'
-import { ZSchema } from './schemas'
+import type { TSong } from '../genius-api'
+import { ZSchema } from '../schemas'
 import type { z } from 'zod'
 
 type TArtist = TSong['primary_artist']

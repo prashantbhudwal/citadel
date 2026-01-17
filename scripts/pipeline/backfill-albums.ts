@@ -6,7 +6,7 @@
 
 import { db } from '@/server/prisma'
 import { fetchSongMetadata } from '@/server/lyrics/genius-api'
-import { persistSongMetadata } from '@/server/lyrics/db'
+import { persistSongMetadata } from '@/server/lyrics/db/db'
 
 const IDS_TO_REFETCH = [
   8092176, // Without Me (Olly James Festival Bootleg)

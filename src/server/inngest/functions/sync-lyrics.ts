@@ -1,5 +1,5 @@
 import { scrapeLyrics } from '@/server/lyrics/scraper'
-import { persistLyrics } from '@/server/lyrics/db'
+import { persistLyrics } from '@/server/lyrics/db/db'
 import { inngest } from '../client'
 
 export const syncLyrics = inngest.createFunction(
