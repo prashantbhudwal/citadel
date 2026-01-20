@@ -85,6 +85,7 @@ model Song {
   lyricsFetchedAt            DateTime?     @map("lyrics_fetched_at")
   lyricsHash                 String?       @map("lyrics_hash")
   analysis                   SongAnalysis?
+  embeddings                 SongEmbedding[]
 }
 
 model SongAnalysis {
@@ -96,4 +97,22 @@ model SongAnalysis {
   hasFeatures        Boolean? @map("has_features")
   hasSuspiciousTitle Boolean? @map("has_suspicious_title")
   isDuplicate        Boolean? @map("is_duplicate")
+}
+
+model SongEmbedding {
+  songId Int
+  song   Song @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  model      String
+  dimensions Int
+
+  vector    Bytes
+  inputHash String @map("input_hash")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@id([songId, model, dimensions])
+  @@index([model, dimensions])
+  @@map("song_embeddings")
 }
