@@ -24,3 +24,5 @@ dotfiles
 notes.llm.md
 .gitignore
 docs/ANALYSIS_ARCHITECTURE.md
+*.dabble.ts
+src/server/lyrics/embeddings/explore
