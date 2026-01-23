@@ -26,3 +26,4 @@ notes.llm.md
 docs/ANALYSIS_ARCHITECTURE.md
 *.dabble.ts
 src/server/lyrics/embeddings/explore
+.geminiignore
