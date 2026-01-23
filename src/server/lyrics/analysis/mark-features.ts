@@ -27,9 +27,7 @@ const processBatch = createSongBatchProcessor({
 export async function markFeatures() {
   const songs = await db.song.findMany({
     where: {
-      analysis: {
-        hasFeatures: null,
-      },
+      OR: [{ analysis: null }, { analysis: { hasFeatures: null } }],
     },
     select: {
       id: true,

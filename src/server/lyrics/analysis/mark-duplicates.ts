@@ -31,28 +31,58 @@ export async function findDuplicateGroups(): Promise<Map<string, number[]>> {
  */
 export async function markDuplicates(): Promise<{
   groupsFound: number
-  songsMarked: number
+  duplicatesMarked: number
+  nonDuplicatesMarked: number
 }> {
   const groups = await findDuplicateGroups()
 
-  let songsMarked = 0
+  // Collect all song IDs that are duplicates (not the canonical ones)
+  const duplicateIds = new Set<number>()
+  const canonicalIds = new Set<number>()
 
   for (const [, songIds] of groups) {
-    const [, ...duplicates] = songIds // first one is canonical, rest are duplicates
-
-    for (const songId of duplicates) {
-      await db.songAnalysis.upsert({
-        where: { songId },
-        create: { songId, isDuplicate: true },
-        update: { isDuplicate: true },
-      })
-      songsMarked++
+    const [canonical, ...duplicates] = songIds
+    canonicalIds.add(canonical)
+    for (const id of duplicates) {
+      duplicateIds.add(id)
     }
+  }
+
+  // Mark duplicates as isDuplicate = true
+  let duplicatesMarked = 0
+  for (const songId of duplicateIds) {
+    await db.songAnalysis.upsert({
+      where: { songId },
+      create: { songId, isDuplicate: true },
+      update: { isDuplicate: true },
+    })
+    duplicatesMarked++
+  }
+
+  // Mark all other songs (not duplicates) as isDuplicate = false
+  // This includes canonical songs and songs not in any duplicate group
+  const allSongsNeedingFalse = await db.song.findMany({
+    where: {
+      OR: [{ analysis: null }, { analysis: { isDuplicate: null } }],
+      id: { notIn: [...duplicateIds] },
+    },
+    select: { id: true },
+  })
+
+  let nonDuplicatesMarked = 0
+  for (const song of allSongsNeedingFalse) {
+    await db.songAnalysis.upsert({
+      where: { songId: song.id },
+      create: { songId: song.id, isDuplicate: false },
+      update: { isDuplicate: false },
+    })
+    nonDuplicatesMarked++
   }
 
   return {
     groupsFound: groups.size,
-    songsMarked,
+    duplicatesMarked,
+    nonDuplicatesMarked,
   }
 }
 

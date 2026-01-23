@@ -24,9 +24,7 @@ const processBatch = createSongBatchProcessor({
 export async function markFreestyles() {
   const songs = await db.song.findMany({
     where: {
-      analysis: {
-        isFreestyle: null,
-      },
+      OR: [{ analysis: null }, { analysis: { isFreestyle: null } }],
     },
     select: {
       id: true,

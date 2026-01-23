@@ -8,7 +8,8 @@ const countWordsAndUpdate = ({
 }: {
   song: BatchSong
 }): ReturnType<typeof db.songAnalysis.upsert> => {
-  const wordCount = countLyricsWords(song.lyrics!)
+  // Handle null lyrics - count as 0 words
+  const wordCount = song.lyrics ? countLyricsWords(song.lyrics) : 0
   return db.songAnalysis.upsert({
     where: { songId: song.id },
     create: { songId: song.id, wordCount },
@@ -23,9 +24,7 @@ const processBatch = createSongBatchProcessor({
 export async function markWordCount() {
   const songs = await db.song.findMany({
     where: {
-      analysis: {
-        wordCount: null,
-      },
+      OR: [{ analysis: null }, { analysis: { wordCount: null } }],
     },
     select: {
       id: true,

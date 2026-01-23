@@ -33,9 +33,7 @@ const processBatch = createSongBatchProcessor({
 export async function markSuspiciousTitles() {
   const songs = await db.song.findMany({
     where: {
-      analysis: {
-        hasSuspiciousTitle: null,
-      },
+      OR: [{ analysis: null }, { analysis: { hasSuspiciousTitle: null } }],
     },
     select: {
       id: true,
