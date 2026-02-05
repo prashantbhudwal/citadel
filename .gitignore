@@ -27,3 +27,7 @@ docs/ANALYSIS_ARCHITECTURE.md
 *.dabble.ts
 src/server/lyrics/embeddings/explore
 .geminiignore
+src/routes/explore
+src/server/explore
+.agent/rules/exploration-rules.md
+decisions.log.md

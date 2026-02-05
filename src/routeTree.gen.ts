@@ -11,6 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DwIndexRouteImport } from './routes/dw/index'
+import { Route as ExploreUmapRouteImport } from './routes/explore/umap'
+import { Route as ExploreSamenessRouteImport } from './routes/explore/sameness'
+import { Route as ExploreEntropyV5RouteImport } from './routes/explore/entropy-v5'
+import { Route as ExploreEntropyV4RouteImport } from './routes/explore/entropy-v4'
+import { Route as ExploreEntropyV3RouteImport } from './routes/explore/entropy-v3'
+import { Route as ExploreEntropyV2RouteImport } from './routes/explore/entropy-v2'
+import { Route as ExploreEntropyRigorousRouteImport } from './routes/explore/entropy-rigorous'
+import { Route as ExploreEntropyRouteImport } from './routes/explore/entropy'
 import { Route as ApiInngestRouteImport } from './routes/api/inngest'
 import { Route as DwBooksIndexRouteImport } from './routes/dw/books/index'
 import { Route as ApiLyricsIndexRouteImport } from './routes/api/lyrics/index'
@@ -24,6 +32,46 @@ const IndexRoute = IndexRouteImport.update({
 const DwIndexRoute = DwIndexRouteImport.update({
   id: '/dw/',
   path: '/dw/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreUmapRoute = ExploreUmapRouteImport.update({
+  id: '/explore/umap',
+  path: '/explore/umap',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreSamenessRoute = ExploreSamenessRouteImport.update({
+  id: '/explore/sameness',
+  path: '/explore/sameness',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreEntropyV5Route = ExploreEntropyV5RouteImport.update({
+  id: '/explore/entropy-v5',
+  path: '/explore/entropy-v5',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreEntropyV4Route = ExploreEntropyV4RouteImport.update({
+  id: '/explore/entropy-v4',
+  path: '/explore/entropy-v4',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreEntropyV3Route = ExploreEntropyV3RouteImport.update({
+  id: '/explore/entropy-v3',
+  path: '/explore/entropy-v3',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreEntropyV2Route = ExploreEntropyV2RouteImport.update({
+  id: '/explore/entropy-v2',
+  path: '/explore/entropy-v2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreEntropyRigorousRoute = ExploreEntropyRigorousRouteImport.update({
+  id: '/explore/entropy-rigorous',
+  path: '/explore/entropy-rigorous',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExploreEntropyRoute = ExploreEntropyRouteImport.update({
+  id: '/explore/entropy',
+  path: '/explore/entropy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiInngestRoute = ApiInngestRouteImport.update({
@@ -50,6 +98,14 @@ const DwApiTestRoute = DwApiTestRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/inngest': typeof ApiInngestRoute
+  '/explore/entropy': typeof ExploreEntropyRoute
+  '/explore/entropy-rigorous': typeof ExploreEntropyRigorousRoute
+  '/explore/entropy-v2': typeof ExploreEntropyV2Route
+  '/explore/entropy-v3': typeof ExploreEntropyV3Route
+  '/explore/entropy-v4': typeof ExploreEntropyV4Route
+  '/explore/entropy-v5': typeof ExploreEntropyV5Route
+  '/explore/sameness': typeof ExploreSamenessRoute
+  '/explore/umap': typeof ExploreUmapRoute
   '/dw': typeof DwIndexRoute
   '/dw/api/test': typeof DwApiTestRoute
   '/api/lyrics': typeof ApiLyricsIndexRoute
@@ -58,6 +114,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/inngest': typeof ApiInngestRoute
+  '/explore/entropy': typeof ExploreEntropyRoute
+  '/explore/entropy-rigorous': typeof ExploreEntropyRigorousRoute
+  '/explore/entropy-v2': typeof ExploreEntropyV2Route
+  '/explore/entropy-v3': typeof ExploreEntropyV3Route
+  '/explore/entropy-v4': typeof ExploreEntropyV4Route
+  '/explore/entropy-v5': typeof ExploreEntropyV5Route
+  '/explore/sameness': typeof ExploreSamenessRoute
+  '/explore/umap': typeof ExploreUmapRoute
   '/dw': typeof DwIndexRoute
   '/dw/api/test': typeof DwApiTestRoute
   '/api/lyrics': typeof ApiLyricsIndexRoute
@@ -67,6 +131,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/inngest': typeof ApiInngestRoute
+  '/explore/entropy': typeof ExploreEntropyRoute
+  '/explore/entropy-rigorous': typeof ExploreEntropyRigorousRoute
+  '/explore/entropy-v2': typeof ExploreEntropyV2Route
+  '/explore/entropy-v3': typeof ExploreEntropyV3Route
+  '/explore/entropy-v4': typeof ExploreEntropyV4Route
+  '/explore/entropy-v5': typeof ExploreEntropyV5Route
+  '/explore/sameness': typeof ExploreSamenessRoute
+  '/explore/umap': typeof ExploreUmapRoute
   '/dw/': typeof DwIndexRoute
   '/dw/api/test': typeof DwApiTestRoute
   '/api/lyrics/': typeof ApiLyricsIndexRoute
@@ -77,6 +149,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/api/inngest'
+    | '/explore/entropy'
+    | '/explore/entropy-rigorous'
+    | '/explore/entropy-v2'
+    | '/explore/entropy-v3'
+    | '/explore/entropy-v4'
+    | '/explore/entropy-v5'
+    | '/explore/sameness'
+    | '/explore/umap'
     | '/dw'
     | '/dw/api/test'
     | '/api/lyrics'
@@ -85,6 +165,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/api/inngest'
+    | '/explore/entropy'
+    | '/explore/entropy-rigorous'
+    | '/explore/entropy-v2'
+    | '/explore/entropy-v3'
+    | '/explore/entropy-v4'
+    | '/explore/entropy-v5'
+    | '/explore/sameness'
+    | '/explore/umap'
     | '/dw'
     | '/dw/api/test'
     | '/api/lyrics'
@@ -93,6 +181,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/api/inngest'
+    | '/explore/entropy'
+    | '/explore/entropy-rigorous'
+    | '/explore/entropy-v2'
+    | '/explore/entropy-v3'
+    | '/explore/entropy-v4'
+    | '/explore/entropy-v5'
+    | '/explore/sameness'
+    | '/explore/umap'
     | '/dw/'
     | '/dw/api/test'
     | '/api/lyrics/'
@@ -102,6 +198,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiInngestRoute: typeof ApiInngestRoute
+  ExploreEntropyRoute: typeof ExploreEntropyRoute
+  ExploreEntropyRigorousRoute: typeof ExploreEntropyRigorousRoute
+  ExploreEntropyV2Route: typeof ExploreEntropyV2Route
+  ExploreEntropyV3Route: typeof ExploreEntropyV3Route
+  ExploreEntropyV4Route: typeof ExploreEntropyV4Route
+  ExploreEntropyV5Route: typeof ExploreEntropyV5Route
+  ExploreSamenessRoute: typeof ExploreSamenessRoute
+  ExploreUmapRoute: typeof ExploreUmapRoute
   DwIndexRoute: typeof DwIndexRoute
   DwApiTestRoute: typeof DwApiTestRoute
   ApiLyricsIndexRoute: typeof ApiLyricsIndexRoute
@@ -122,6 +226,62 @@ declare module '@tanstack/react-router' {
       path: '/dw'
       fullPath: '/dw'
       preLoaderRoute: typeof DwIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/umap': {
+      id: '/explore/umap'
+      path: '/explore/umap'
+      fullPath: '/explore/umap'
+      preLoaderRoute: typeof ExploreUmapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/sameness': {
+      id: '/explore/sameness'
+      path: '/explore/sameness'
+      fullPath: '/explore/sameness'
+      preLoaderRoute: typeof ExploreSamenessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/entropy-v5': {
+      id: '/explore/entropy-v5'
+      path: '/explore/entropy-v5'
+      fullPath: '/explore/entropy-v5'
+      preLoaderRoute: typeof ExploreEntropyV5RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/entropy-v4': {
+      id: '/explore/entropy-v4'
+      path: '/explore/entropy-v4'
+      fullPath: '/explore/entropy-v4'
+      preLoaderRoute: typeof ExploreEntropyV4RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/entropy-v3': {
+      id: '/explore/entropy-v3'
+      path: '/explore/entropy-v3'
+      fullPath: '/explore/entropy-v3'
+      preLoaderRoute: typeof ExploreEntropyV3RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/entropy-v2': {
+      id: '/explore/entropy-v2'
+      path: '/explore/entropy-v2'
+      fullPath: '/explore/entropy-v2'
+      preLoaderRoute: typeof ExploreEntropyV2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/entropy-rigorous': {
+      id: '/explore/entropy-rigorous'
+      path: '/explore/entropy-rigorous'
+      fullPath: '/explore/entropy-rigorous'
+      preLoaderRoute: typeof ExploreEntropyRigorousRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explore/entropy': {
+      id: '/explore/entropy'
+      path: '/explore/entropy'
+      fullPath: '/explore/entropy'
+      preLoaderRoute: typeof ExploreEntropyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/inngest': {
@@ -158,6 +318,14 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiInngestRoute: ApiInngestRoute,
+  ExploreEntropyRoute: ExploreEntropyRoute,
+  ExploreEntropyRigorousRoute: ExploreEntropyRigorousRoute,
+  ExploreEntropyV2Route: ExploreEntropyV2Route,
+  ExploreEntropyV3Route: ExploreEntropyV3Route,
+  ExploreEntropyV4Route: ExploreEntropyV4Route,
+  ExploreEntropyV5Route: ExploreEntropyV5Route,
+  ExploreSamenessRoute: ExploreSamenessRoute,
+  ExploreUmapRoute: ExploreUmapRoute,
   DwIndexRoute: DwIndexRoute,
   DwApiTestRoute: DwApiTestRoute,
   ApiLyricsIndexRoute: ApiLyricsIndexRoute,

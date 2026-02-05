@@ -1,8 +1,4 @@
-import { updateAllSongHashes } from './server/lyrics/db/backfill-songs-hashes'
-
-export async function run() {
-  await updateAllSongHashes()
-}
+export async function run() {}
 
 run()
   .then(() => {
