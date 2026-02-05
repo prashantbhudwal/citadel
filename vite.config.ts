@@ -5,6 +5,7 @@ import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
 import { nitro } from 'nitro/vite'
+import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
   plugins: [
@@ -15,7 +16,16 @@ const config = defineConfig({
       projects: ['./tsconfig.json'],
     }),
     tailwindcss(),
-    tanstackStart(),
+    tanstackStart({
+      // srcDirectory: 'src',
+      // router: { routesDirectory: 'routes' },
+      // prerender: {
+      //   enabled: true,
+      //   crawlLinks: true,
+      //   filter: ({ path }) => !path.startsWith('/api'),
+      // },
+      // pages: [{ path: '/', prerender: { enabled: true } }],
+    }),
     viteReact(),
   ],
 })
